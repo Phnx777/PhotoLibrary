@@ -7,18 +7,20 @@
 //
 
 #import "ViewController.h"
+#import <Photos/Photos.h>
 #import "PLAlbumCollectionViewCell.h"
 #import "PLPhotosViewController.h"
-#import <Photos/Photos.h>
+#import "ImageAssetsManager.h"
 #import "Album.h"
 @interface ViewController ()
 <UICollectionViewDataSource, UICollectionViewDelegate,
 PLAlbumCollectionViewCellDelegate>
 @property (nonatomic, strong) UICollectionView *albumCollectionView;
+@property (nonatomic, strong) ImageAssetsManager *assetManager;
 @end
 
 @implementation ViewController {
-    NSMutableArray *_albumsArray;
+    NSArray *_albumsArray;
 }
 
 
@@ -42,11 +44,10 @@ PLAlbumCollectionViewCellDelegate>
     self.albumCollectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.albumCollectionView];
     
+    self.assetManager = [[ImageAssetsManager alloc]init];
+    
     [self checkAutorizationStatus];
 }
-
-
-#pragma PHAssetCollection
 
 - (void)checkAutorizationStatus
 {
@@ -97,64 +98,16 @@ PLAlbumCollectionViewCellDelegate>
 
 - (void)loadLibrary
 {
-    _albumsArray = [NSMutableArray new];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
+    dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
         
-        PHFetchResult *assetCollection = [PHAssetCollection
-                                          fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum
-                                          subtype:PHAssetCollectionSubtypeAny
-                                          options:nil];
-        
-        [assetCollection enumerateObjectsUsingBlock:^(PHAssetCollection *collection,
-                                                      NSUInteger idx, BOOL * _Nonnull stop) {
-            PHFetchOptions *options = [PHFetchOptions new];
-            options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate"
-                                                                      ascending:YES]];
-            PHFetchResult *assetResult = [PHAsset fetchAssetsInAssetCollection:collection options:options];
-            NSMutableArray * assets = [NSMutableArray new];
-            [assetResult enumerateObjectsUsingBlock:^(PHAsset * asset, NSUInteger idx, BOOL *stop) {
-                if (asset.mediaType == PHAssetMediaTypeImage) {
-                    [assets addObject:asset];
-                }
-            }];
-            if (assets.count) {
-                Album *album = [Album new];
-                album.assets = assets;
-                album.name = collection.localizedTitle;
-                album.lastImageData = [self getDataFromAsset:[album.assets lastObject]];
-                [_albumsArray addObject:album];
-            }
-        }];
+        _albumsArray = [self.assetManager fetchAssetCollections];
         if (_albumsArray.count) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.albumCollectionView reloadData];
             });
         }
     });
-}
-
-- (NSData*)getDataFromAsset:(PHAsset *)asset {
-    
-    __block NSData *dataImage;
-    PHImageRequestOptions *requestOptions;
-    requestOptions = [[PHImageRequestOptions alloc] init];
-    requestOptions.resizeMode   = PHImageRequestOptionsResizeModeFast;
-    requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
-    requestOptions.synchronous = YES;
-    PHImageManager *manager = [PHImageManager defaultManager];
-    [manager requestImageDataForAsset:asset
-                              options:requestOptions
-                        resultHandler:^(NSData * imageData,
-                                        NSString * _Nullable dataUTI,
-                                        UIImageOrientation orientation,
-                                        NSDictionary * _Nullable info) {
-                            if (imageData) {
-                                dataImage = imageData;
-                            }
-                            
-                        }];
-    
-    return dataImage;
 }
 
 #pragma PLAlbumCollectionViewCellDelegate

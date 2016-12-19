@@ -18,6 +18,7 @@
 		D04E03661E06E2550063E6B3 /* PLPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04E03651E06E2550063E6B3 /* PLPhotosViewController.m */; };
 		D04E036C1E0722710063E6B3 /* PLFullScreenPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */; };
 		D0B43E7B1E05CE01009A908B /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B43E7A1E05CE01009A908B /* Album.m */; };
+		D0D12EB71E07B079002225E6 /* ImageAssetsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,8 @@
 		D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLFullScreenPhotoViewController.m; sourceTree = "<group>"; };
 		D0B43E791E05CE01009A908B /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
 		D0B43E7A1E05CE01009A908B /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		D0D12EB51E07B079002225E6 /* ImageAssetsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAssetsManager.h; sourceTree = "<group>"; };
+		D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAssetsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,9 +78,8 @@
 			children = (
 				D01A4CF01E032FD700938DAE /* AppDelegate.h */,
 				D01A4CF11E032FD700938DAE /* AppDelegate.m */,
-				D01A4D041E0330E500938DAE /* ViewControllers */,
 				D0B43E7C1E05CE0B009A908B /* Model */,
-				D0B43E7D1E05CE28009A908B /* View */,
+				D0D12EB81E07B365002225E6 /* Modules */,
 				D01A4CF61E032FD700938DAE /* Main.storyboard */,
 				D01A4CF91E032FD700938DAE /* Assets.xcassets */,
 				D01A4CFB1E032FD700938DAE /* LaunchScreen.storyboard */,
@@ -98,12 +100,8 @@
 		D01A4D041E0330E500938DAE /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D01A4CF31E032FD700938DAE /* ViewController.h */,
-				D01A4CF41E032FD700938DAE /* ViewController.m */,
 				D04E03641E06E2550063E6B3 /* PLPhotosViewController.h */,
 				D04E03651E06E2550063E6B3 /* PLPhotosViewController.m */,
-				D04E036A1E0722710063E6B3 /* PLFullScreenPhotoViewController.h */,
-				D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -111,8 +109,6 @@
 		D01A4D051E0330F800938DAE /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				D01A4D061E0331A000938DAE /* PLAlbumCollectionViewCell.h */,
-				D01A4D071E0331A000938DAE /* PLAlbumCollectionViewCell.m */,
 				D04E03611E06E2320063E6B3 /* PLPhotoCollectionViewCell.h */,
 				D04E03621E06E2320063E6B3 /* PLPhotoCollectionViewCell.m */,
 			);
@@ -124,16 +120,73 @@
 			children = (
 				D0B43E791E05CE01009A908B /* Album.h */,
 				D0B43E7A1E05CE01009A908B /* Album.m */,
+				D0D12EB51E07B079002225E6 /* ImageAssetsManager.h */,
+				D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
 		};
-		D0B43E7D1E05CE28009A908B /* View */ = {
+		D0D12EAF1E07AED8002225E6 /* List of Albums */ = {
 			isa = PBXGroup;
 			children = (
-				D01A4D051E0330F800938DAE /* Cells */,
+				D0D12EB01E07AF02002225E6 /* ViewControllers */,
+				D0D12EB11E07AF18002225E6 /* View */,
+			);
+			name = "List of Albums";
+			sourceTree = "<group>";
+		};
+		D0D12EB01E07AF02002225E6 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D01A4CF31E032FD700938DAE /* ViewController.h */,
+				D01A4CF41E032FD700938DAE /* ViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D0D12EB11E07AF18002225E6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D0D12EB21E07AF68002225E6 /* Cell */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		D0D12EB21E07AF68002225E6 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D01A4D061E0331A000938DAE /* PLAlbumCollectionViewCell.h */,
+				D01A4D071E0331A000938DAE /* PLAlbumCollectionViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		D0D12EB31E07AFF4002225E6 /* List of Photos */ = {
+			isa = PBXGroup;
+			children = (
+				D01A4D041E0330E500938DAE /* ViewControllers */,
+				D01A4D051E0330F800938DAE /* Cells */,
+			);
+			name = "List of Photos";
+			sourceTree = "<group>";
+		};
+		D0D12EB41E07B00E002225E6 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				D04E036A1E0722710063E6B3 /* PLFullScreenPhotoViewController.h */,
+				D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
+		D0D12EB81E07B365002225E6 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				D0D12EAF1E07AED8002225E6 /* List of Albums */,
+				D0D12EB31E07AFF4002225E6 /* List of Photos */,
+				D0D12EB41E07B00E002225E6 /* Preview */,
+			);
+			name = Modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +220,7 @@
 				TargetAttributes = {
 					D01A4CE91E032FD600938DAE = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = LE59PD8Y77;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -211,6 +265,7 @@
 				D01A4CF51E032FD700938DAE /* ViewController.m in Sources */,
 				D04E03631E06E2320063E6B3 /* PLPhotoCollectionViewCell.m in Sources */,
 				D01A4CF21E032FD700938DAE /* AppDelegate.m in Sources */,
+				D0D12EB71E07B079002225E6 /* ImageAssetsManager.m in Sources */,
 				D04E03661E06E2550063E6B3 /* PLPhotosViewController.m in Sources */,
 				D01A4D081E0331A000938DAE /* PLAlbumCollectionViewCell.m in Sources */,
 				D0B43E7B1E05CE01009A908B /* Album.m in Sources */,
@@ -336,11 +391,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LE59PD8Y77;
 				INFOPLIST_FILE = PhotoLibrary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "-.PhotoLibrary";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Imal.PhotoLibrary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -350,11 +405,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LE59PD8Y77;
 				INFOPLIST_FILE = PhotoLibrary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "-.PhotoLibrary";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Imal.PhotoLibrary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};

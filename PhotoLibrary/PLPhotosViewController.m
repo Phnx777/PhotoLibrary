@@ -9,12 +9,14 @@
 #import "PLPhotosViewController.h"
 #import "PLPhotoCollectionViewCell.h"
 #import "PLFullScreenPhotoViewController.h"
+#import "ImageAssetsManager.h"
 @interface PLPhotosViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) UICollectionView *photosCollectionView;
+@property (nonatomic, strong) ImageAssetsManager *assetManager;
 @end
 
 @implementation PLPhotosViewController {
-    NSMutableArray *_photoAssetsArray;
+    NSArray *_photoAssetsArray;
 }
 
 - (void)viewDidLoad {
@@ -33,6 +35,8 @@
     self.photosCollectionView.showsVerticalScrollIndicator = YES;
     self.photosCollectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.photosCollectionView];
+    
+    self.assetManager = [[ImageAssetsManager alloc]init];
 }
 
 - (void)setAlbum:(Album *)album
@@ -41,31 +45,10 @@
     self.title = album.name;
 }
 
--(void)getImageFromAsset:(PHAsset *)asset andSuccessBlock:(void (^)(UIImage * photo))success {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        PHImageRequestOptions *requestOptions;
-        requestOptions = [[PHImageRequestOptions alloc] init];
-        requestOptions.resizeMode   = PHImageRequestOptionsResizeModeFast;
-        requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
-        requestOptions.synchronous = YES;
-        PHImageManager *manager = [PHImageManager defaultManager];
-        [manager requestImageForAsset:asset
-                           targetSize:self.view.bounds.size
-                          contentMode:PHImageContentModeDefault
-                              options:requestOptions
-                        resultHandler:^void(UIImage *image, NSDictionary *info) {
-                                if(image){
-                                    success(image);
-                                }
-                        }];
-    });
-    
-}
-
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%@", indexPath);
-    PLFullScreenPhotoViewController *vc = [PLFullScreenPhotoViewController new];
+    PLFullScreenPhotoViewController *vc = [[PLFullScreenPhotoViewController alloc]init];
     vc.indexPath = indexPath;
     vc.assetsArray = _photoAssetsArray;
     [self.navigationController pushViewController:vc animated:YES];
@@ -82,7 +65,7 @@
                                        [PLPhotoCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     [cell commonInit];
     PHAsset *asset = _photoAssetsArray[indexPath.row];
-    [self getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
+    [self.assetManager getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.photo.image = photo;
         });

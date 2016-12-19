@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Album.h"
-#import <Photos/Photos.h>
 @interface PLPhotosViewController : UIViewController
 @property (nonatomic, strong) Album *album;
--(void)getImageFromAsset:(PHAsset *)asset andSuccessBlock:(void (^)(UIImage * photo))success;
+
 @end

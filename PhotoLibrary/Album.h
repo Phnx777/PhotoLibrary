@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface Album : NSObject
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSMutableArray *assets;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSArray *assets;
 @property (nonatomic, strong) NSData *lastImageData;
 @end

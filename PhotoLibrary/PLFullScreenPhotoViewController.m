@@ -9,15 +9,13 @@
 #import "PLFullScreenPhotoViewController.h"
 #import "PLPhotosViewController.h"
 #import "PLPhotoCollectionViewCell.h"
+#import "ImageAssetsManager.h"
 @interface PLFullScreenPhotoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, strong) UICollectionView *photosCollectionView;
-@property (nonatomic, strong) PLPhotosViewController *photosViewController;
+@property (nonatomic, strong) ImageAssetsManager *assetManager;
 @end
 
-@implementation PLFullScreenPhotoViewController {
-    int _currentPage;
-}
-
+@implementation PLFullScreenPhotoViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
     UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
@@ -34,39 +32,11 @@
     self.photosCollectionView.delegate = self;
     self.photosCollectionView.showsVerticalScrollIndicator = YES;
     self.photosCollectionView.alwaysBounceVertical = NO;
+    [self.photosCollectionView setPagingEnabled:YES];
     [self.view addSubview:self.photosCollectionView];
     
-    self.photosViewController = [PLPhotosViewController new];
+    self.assetManager = [[ImageAssetsManager alloc]init];
     [self.photosCollectionView scrollToItemAtIndexPath:self.indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
-    _currentPage = (int)self.indexPath.row;
-}
-
-- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    
-    CGFloat pageWidth = self.photosCollectionView.frame.size.width;
-    
-    _currentPage = floor((self.photosCollectionView.contentOffset.x - pageWidth/2)/pageWidth) + 1;
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
-                     withVelocity:(CGPoint)velocity
-              targetContentOffset:(inout CGPoint*)targetContentOffset {
-    
-    CGFloat pageWidth = self.photosCollectionView.frame.size.width;
-    
-    int newPage = _currentPage;
-    
-    if (velocity.x == 0) {
-        newPage = (targetContentOffset->x - pageWidth/2)/pageWidth;
-    } else {
-        newPage = velocity.x > 0 ? _currentPage + 1 : _currentPage - 1;
-        
-        if (newPage < 0)
-            newPage = 0;
-        if (newPage > self.photosCollectionView.contentSize.width / pageWidth)
-            newPage = ceil(self.photosCollectionView.contentSize.width / pageWidth) - 1.0;
-    }
-    *targetContentOffset = CGPointMake(newPage * pageWidth, targetContentOffset->y);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -80,7 +50,7 @@
                                        [PLPhotoCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     [cell commonInit];
     PHAsset *asset = self.assetsArray[indexPath.row];
-    [self.photosViewController getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
+    [self.assetManager getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
         dispatch_async(dispatch_get_main_queue(), ^{
             cell.photo.image = photo;
         });
@@ -101,7 +71,5 @@
     [super viewDidLayoutSubviews];
     self.photosCollectionView.frame = self.view.bounds;
 }
-
-
 
 @end

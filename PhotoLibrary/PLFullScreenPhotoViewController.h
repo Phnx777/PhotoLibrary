@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 @interface PLFullScreenPhotoViewController : UIViewController
-@property (nonatomic, strong) NSMutableArray *assetsArray;
+@property (nonatomic, copy) NSArray *assetsArray;
 @property (nonatomic, strong) NSIndexPath * indexPath;
 @end
