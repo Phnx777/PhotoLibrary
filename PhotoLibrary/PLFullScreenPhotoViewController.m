@@ -44,7 +44,6 @@
     [self.photosCollectionView setPagingEnabled:YES];
     [self.view addSubview:self.photosCollectionView];
     
-    self.assetManager = [[ImageAssetsManager alloc]init];
     [self.photosCollectionView scrollToItemAtIndexPath:self.indexPath
                                       atScrollPosition:UICollectionViewScrollPositionNone
                                               animated:NO];

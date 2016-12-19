@@ -43,8 +43,6 @@
     self.photosCollectionView.dataSource = self;
     self.photosCollectionView.delegate = self;
     [self.view addSubview:self.photosCollectionView];
-    
-    self.assetManager = [[ImageAssetsManager alloc]init];
 }
 
 - (void)setAlbum:(Album *)album
