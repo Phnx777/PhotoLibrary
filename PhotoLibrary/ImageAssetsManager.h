@@ -11,4 +11,5 @@
 @interface ImageAssetsManager : NSObject
 -(void)getImageFromAsset:(PHAsset *)asset andSuccessBlock:(void (^)(UIImage * photo))success;
 - (NSArray*)fetchAssetCollections;
+- (void)cancelGettingImageFromAsset:(PHAsset *)asset;
 @end

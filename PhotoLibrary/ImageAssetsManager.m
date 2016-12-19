@@ -8,8 +8,19 @@
 
 #import "ImageAssetsManager.h"
 #import "Album.h"
-@implementation ImageAssetsManager
--(void)getImageFromAsset:(PHAsset *)asset andSuccessBlock:(void (^)(UIImage * photo))success {
+@implementation ImageAssetsManager {
+    NSMutableDictionary *_photoIDDictionary;
+}
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _photoIDDictionary = [[NSMutableDictionary alloc]init];
+    }
+    return self;
+}
+
+- (void)getImageFromAsset:(PHAsset *)asset andSuccessBlock:(void (^)(UIImage * photo))success {
     dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
         PHImageRequestOptions *requestOptions;
         requestOptions = [[PHImageRequestOptions alloc] init];
@@ -17,7 +28,7 @@
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
         requestOptions.synchronous = YES;
         PHImageManager *manager = [PHImageManager defaultManager];
-        [manager requestImageForAsset:asset
+        PHImageRequestID photoID = [manager requestImageForAsset:asset
                            targetSize:[[UIScreen mainScreen] bounds].size
                           contentMode:PHImageContentModeDefault
                               options:requestOptions
@@ -26,7 +37,17 @@
                                 success(image);
                             }
                         }];
+        [_photoIDDictionary setObject:@(photoID) forKey:asset];
     });
+}
+
+- (void)cancelGettingImageFromAsset:(PHAsset *)asset
+{
+    if ([_photoIDDictionary objectForKey:asset]) {
+        NSNumber *assetID = [_photoIDDictionary objectForKey:asset];
+        PHImageManager *manager = [PHImageManager defaultManager];
+        [manager cancelImageRequest:(PHImageRequestID)assetID];
+    }
 }
 
 - (NSArray*)fetchAssetCollections
@@ -40,17 +61,17 @@
     
     [assetCollection enumerateObjectsUsingBlock:^(PHAssetCollection *collection,
                                                   NSUInteger idx, BOOL * _Nonnull stop) {
-        PHFetchOptions *options = [PHFetchOptions new];
+        PHFetchOptions *options = [[PHFetchOptions alloc]init];
         options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate"
                                                                   ascending:YES]];
         options.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d",PHAssetMediaTypeImage];
         PHFetchResult *assetResult = [PHAsset fetchAssetsInAssetCollection:collection options:options];
-        NSMutableArray * assets = [NSMutableArray new];
+        NSMutableArray * assets = [[NSMutableArray alloc]init];
         [assetResult enumerateObjectsUsingBlock:^(PHAsset * asset, NSUInteger idx, BOOL *stop) {
             [assets addObject:asset];
         }];
         if (assets.count) {
-            Album *album = [Album new];
+            Album *album = [[Album alloc]init];
             album.assets = assets;
             album.name = collection.localizedTitle;
             album.lastImageData = [self getDataFromAsset:[album.assets lastObject]];

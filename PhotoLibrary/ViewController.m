@@ -13,8 +13,7 @@
 #import "ImageAssetsManager.h"
 #import "Album.h"
 @interface ViewController ()
-<UICollectionViewDataSource, UICollectionViewDelegate,
-PLAlbumCollectionViewCellDelegate>
+<UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) UICollectionView *albumCollectionView;
 @property (nonatomic, strong) ImageAssetsManager *assetManager;
 @end
@@ -23,13 +22,17 @@ PLAlbumCollectionViewCellDelegate>
     NSArray *_albumsArray;
 }
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+        self.assetManager = [[ImageAssetsManager alloc]init];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     self.albumCollectionView = [[UICollectionView alloc]
@@ -37,19 +40,15 @@ PLAlbumCollectionViewCellDelegate>
                                   collectionViewLayout:layout];
     [self.albumCollectionView registerClass:[PLAlbumCollectionViewCell class]
                    forCellWithReuseIdentifier:[PLAlbumCollectionViewCell cellIdentifier]];
-    self.albumCollectionView.backgroundColor = [UIColor whiteColor];
+    self.albumCollectionView.backgroundColor = [UIColor whiteColor];;
     self.albumCollectionView.dataSource = self;
     self.albumCollectionView.delegate = self;
-    self.albumCollectionView.showsVerticalScrollIndicator = YES;
-    self.albumCollectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.albumCollectionView];
     
-    self.assetManager = [[ImageAssetsManager alloc]init];
-    
-    [self checkAutorizationStatus];
+    [self loadLibraryOrAskAccess];
 }
 
-- (void)checkAutorizationStatus
+- (void)loadLibraryOrAskAccess
 {
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
     if (status == PHAuthorizationStatusAuthorized) {
@@ -59,13 +58,13 @@ PLAlbumCollectionViewCellDelegate>
             if (status == PHAuthorizationStatusAuthorized) {
                 [self loadLibrary];
             } else if (status == PHAuthorizationStatusDenied) {
-                [self accessToLibraryIsNotAllowed];
+                [self warnAboutAccessToLibrary];
             }
         }];
     }
 }
 
-- (void)accessToLibraryIsNotAllowed
+- (void)warnAboutAccessToLibrary
 {
     NSString *title = @"Доступ к галерее запрещен!";
     NSString *message = @"Разрешите доступ для работы с приложением!";
@@ -90,17 +89,13 @@ PLAlbumCollectionViewCellDelegate>
     [alertController addAction:okAction];
     [alertController addAction:settingsAction];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self presentViewController:alertController animated:YES completion:nil];
-    });
-
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)loadLibrary
 {
     
     dispatch_async(dispatch_get_global_queue(NSQualityOfServiceUserInteractive, 0), ^{
-        
         _albumsArray = [self.assetManager fetchAssetCollections];
         if (_albumsArray.count) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -110,11 +105,11 @@ PLAlbumCollectionViewCellDelegate>
     });
 }
 
-#pragma PLAlbumCollectionViewCellDelegate
-
-- (void)didSelectAlbum:(Album *)album
+- (void)openAlbum:(Album*)album
 {
-    [self openAlbum:album];
+    PLPhotosViewController *vc = [[PLPhotosViewController alloc]initWithAlbum:album
+                                                            imageAssetManager:self.assetManager];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma CollectionView Delegates
@@ -128,28 +123,18 @@ PLAlbumCollectionViewCellDelegate>
 {
     PLAlbumCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
                                        [PLAlbumCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-    [cell commonInit];
     Album *album = _albumsArray[indexPath.row];
-    cell.album = album;
-    cell.delegate = self;
+    [cell configureIcon:album.lastImageData];
+    [cell configureAlbumName:album.name];
+    [cell configureAssetsNumber:album.assets.count];
     cell.isSecondInRow = indexPath.row%2;
-   
     return cell;
 }
 
-- (void)openAlbum:(Album*)album
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    PLPhotosViewController *vc = [PLPhotosViewController new];
-    vc.album = album;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout*)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(25, 0, 0, 0);
+    Album *album = _albumsArray[indexPath.row];
+    [self openAlbum:album];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -159,6 +144,13 @@ PLAlbumCollectionViewCellDelegate>
     CGSize size = self.view.bounds.size;
     CGFloat cellSide = size.width/2;
     return CGSizeMake(cellSide, cellSide);
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout*)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(25, 0, 0, 0);
 }
 
 #pragma Layouts

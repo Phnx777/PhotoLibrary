@@ -6,22 +6,16 @@
 //  Copyright © 2016 Имал Фарук. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PLCollectionViewCell.h"
 #import "Album.h"
 @class PLAlbumCollectionViewCell;
 
-@protocol PLAlbumCollectionViewCellDelegate <NSObject>
+@interface PLAlbumCollectionViewCell : PLCollectionViewCell
 
-- (void)didSelectAlbum:(Album*)album;
-
-@end
-
-@interface PLAlbumCollectionViewCell : UICollectionViewCell
-@property (weak) id <PLAlbumCollectionViewCellDelegate> delegate;
 @property (nonatomic, assign) BOOL isSecondInRow;
-@property (nonatomic, strong) Album *album;
-- (void)commonInit;
 
-+ (NSString *)cellIdentifier;
+- (void)configureIcon:(NSData*)icon;
+- (void)configureAlbumName:(NSString*)name;
+- (void)configureAssetsNumber:(long)number;
 
 @end

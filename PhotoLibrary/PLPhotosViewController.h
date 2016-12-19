@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Album.h"
+#import "ImageAssetsManager.h"
 @interface PLPhotosViewController : UIViewController
-@property (nonatomic, strong) Album *album;
-
+- (instancetype)initWithAlbum:(Album *)album
+            imageAssetManager:(ImageAssetsManager*)assetManager;
 @end

@@ -13,27 +13,35 @@
 @interface PLPhotosViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) UICollectionView *photosCollectionView;
 @property (nonatomic, strong) ImageAssetsManager *assetManager;
+@property (nonatomic, strong) Album *album;
 @end
 
 @implementation PLPhotosViewController {
     NSArray *_photoAssetsArray;
 }
 
+- (instancetype)initWithAlbum:(Album *)album imageAssetManager:(ImageAssetsManager*)assetManager
+{
+    if ((self = [super init])) {
+        self.assetManager = assetManager;
+        self.album = album;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0;
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+    layout.minimumLineSpacing = 1;
+    layout.minimumInteritemSpacing = 1;
     self.photosCollectionView = [[UICollectionView alloc]
                                 initWithFrame:self.view.bounds
                                 collectionViewLayout:layout];
     [self.photosCollectionView registerClass:[PLPhotoCollectionViewCell class]
                  forCellWithReuseIdentifier:[PLPhotoCollectionViewCell cellIdentifier]];
-    self.photosCollectionView.backgroundColor = [UIColor whiteColor];
+    self.photosCollectionView.backgroundColor = [UIColor whiteColor];;
     self.photosCollectionView.dataSource = self;
     self.photosCollectionView.delegate = self;
-    self.photosCollectionView.showsVerticalScrollIndicator = YES;
-    self.photosCollectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.photosCollectionView];
     
     self.assetManager = [[ImageAssetsManager alloc]init];
@@ -47,10 +55,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%@", indexPath);
-    PLFullScreenPhotoViewController *vc = [[PLFullScreenPhotoViewController alloc]init];
+    PLFullScreenPhotoViewController *vc = [[PLFullScreenPhotoViewController alloc]initWithAssets:_photoAssetsArray
+                                                                               imageAssetManager:self.assetManager];
     vc.indexPath = indexPath;
-    vc.assetsArray = _photoAssetsArray;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -63,13 +70,13 @@
 {
     PLPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
                                        [PLPhotoCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-    [cell commonInit];
     PHAsset *asset = _photoAssetsArray[indexPath.row];
     [self.assetManager getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            cell.photo.image = photo;
+            [cell configureImage:photo];
         });
     }];
+    [self.assetManager cancelGettingImageFromAsset:asset];
     return cell;
 }
 
@@ -78,7 +85,7 @@
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGSize size = self.view.bounds.size;
-    CGFloat cellSide = size.width/3;
+    CGFloat cellSide = size.width/3 - 1;
     return CGSizeMake(cellSide, cellSide);
 }
 

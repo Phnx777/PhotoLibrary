@@ -1,26 +1,25 @@
 //
-//  PLPhotoCollectionViewCell.m
+//  PLFullScreenCollectionViewCell.m
 //  PhotoLibrary
 //
-//  Created by Имал Фарук on 18.12.16.
+//  Created by Имал Фарук on 19.12.16.
 //  Copyright © 2016 Имал Фарук. All rights reserved.
 //
 
-#import "PLPhotoCollectionViewCell.h"
+#import "PLFullScreenCollectionViewCell.h"
 
-@interface PLPhotoCollectionViewCell ()
+@interface PLFullScreenCollectionViewCell ()
 @property (nonatomic, strong) UIImageView *photo;
 @end
 
-@implementation PLPhotoCollectionViewCell
+@implementation PLFullScreenCollectionViewCell
+
 - (void)commonInit
 {
     [super commonInit];
     self.photo = [[UIImageView alloc]init];
-    self.photo.contentMode = UIViewContentModeScaleAspectFill;
+    self.photo.contentMode = UIViewContentModeScaleAspectFit;
     [self.contentView addSubview:self.photo];
-    self.contentView.layer.cornerRadius = 10;
-    self.contentView.layer.masksToBounds = YES;
 }
 
 - (void)configureImage:(UIImage*)image
@@ -39,4 +38,5 @@
     [super layoutSubviews];
     self.photo.frame = self.contentView.bounds;
 }
+
 @end

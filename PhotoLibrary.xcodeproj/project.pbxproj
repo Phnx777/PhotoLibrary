@@ -18,7 +18,9 @@
 		D04E03661E06E2550063E6B3 /* PLPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04E03651E06E2550063E6B3 /* PLPhotosViewController.m */; };
 		D04E036C1E0722710063E6B3 /* PLFullScreenPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */; };
 		D0B43E7B1E05CE01009A908B /* Album.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B43E7A1E05CE01009A908B /* Album.m */; };
+		D0B749E11E07FB42003E8B04 /* PLFullScreenCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B749E01E07FB42003E8B04 /* PLFullScreenCollectionViewCell.m */; };
 		D0D12EB71E07B079002225E6 /* ImageAssetsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */; };
+		D0D12EBD1E07C682002225E6 /* PLCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D12EBC1E07C682002225E6 /* PLCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +44,12 @@
 		D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLFullScreenPhotoViewController.m; sourceTree = "<group>"; };
 		D0B43E791E05CE01009A908B /* Album.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Album.h; sourceTree = "<group>"; };
 		D0B43E7A1E05CE01009A908B /* Album.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Album.m; sourceTree = "<group>"; };
+		D0B749DF1E07FB42003E8B04 /* PLFullScreenCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFullScreenCollectionViewCell.h; sourceTree = "<group>"; };
+		D0B749E01E07FB42003E8B04 /* PLFullScreenCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLFullScreenCollectionViewCell.m; sourceTree = "<group>"; };
 		D0D12EB51E07B079002225E6 /* ImageAssetsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAssetsManager.h; sourceTree = "<group>"; };
 		D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAssetsManager.m; sourceTree = "<group>"; };
+		D0D12EBB1E07C682002225E6 /* PLCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLCollectionViewCell.h; sourceTree = "<group>"; };
+		D0D12EBC1E07C682002225E6 /* PLCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,10 +84,12 @@
 			children = (
 				D01A4CF01E032FD700938DAE /* AppDelegate.h */,
 				D01A4CF11E032FD700938DAE /* AppDelegate.m */,
+				D0D12EB91E07C3B5002225E6 /* Manager */,
 				D0B43E7C1E05CE0B009A908B /* Model */,
 				D0D12EB81E07B365002225E6 /* Modules */,
-				D01A4CF61E032FD700938DAE /* Main.storyboard */,
+				D0D12EBA1E07C661002225E6 /* BaseUI */,
 				D01A4CF91E032FD700938DAE /* Assets.xcassets */,
+				D01A4CF61E032FD700938DAE /* Main.storyboard */,
 				D01A4CFB1E032FD700938DAE /* LaunchScreen.storyboard */,
 				D01A4CFE1E032FD700938DAE /* Info.plist */,
 				D01A4CED1E032FD700938DAE /* Supporting Files */,
@@ -120,10 +128,34 @@
 			children = (
 				D0B43E791E05CE01009A908B /* Album.h */,
 				D0B43E7A1E05CE01009A908B /* Album.m */,
-				D0D12EB51E07B079002225E6 /* ImageAssetsManager.h */,
-				D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		D0B749DC1E07FAFE003E8B04 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D0B749DD1E07FB07003E8B04 /* Cell */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		D0B749DD1E07FB07003E8B04 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D0B749DF1E07FB42003E8B04 /* PLFullScreenCollectionViewCell.h */,
+				D0B749E01E07FB42003E8B04 /* PLFullScreenCollectionViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		D0B749DE1E07FB0D003E8B04 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D04E036A1E0722710063E6B3 /* PLFullScreenPhotoViewController.h */,
+				D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */,
+			);
+			name = ViewController;
 			sourceTree = "<group>";
 		};
 		D0D12EAF1E07AED8002225E6 /* List of Albums */ = {
@@ -173,8 +205,8 @@
 		D0D12EB41E07B00E002225E6 /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				D04E036A1E0722710063E6B3 /* PLFullScreenPhotoViewController.h */,
-				D04E036B1E0722710063E6B3 /* PLFullScreenPhotoViewController.m */,
+				D0B749DE1E07FB0D003E8B04 /* ViewController */,
+				D0B749DC1E07FAFE003E8B04 /* View */,
 			);
 			name = Preview;
 			sourceTree = "<group>";
@@ -187,6 +219,24 @@
 				D0D12EB41E07B00E002225E6 /* Preview */,
 			);
 			name = Modules;
+			sourceTree = "<group>";
+		};
+		D0D12EB91E07C3B5002225E6 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				D0D12EB51E07B079002225E6 /* ImageAssetsManager.h */,
+				D0D12EB61E07B079002225E6 /* ImageAssetsManager.m */,
+			);
+			name = Manager;
+			sourceTree = "<group>";
+		};
+		D0D12EBA1E07C661002225E6 /* BaseUI */ = {
+			isa = PBXGroup;
+			children = (
+				D0D12EBB1E07C682002225E6 /* PLCollectionViewCell.h */,
+				D0D12EBC1E07C682002225E6 /* PLCollectionViewCell.m */,
+			);
+			name = BaseUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,10 +315,12 @@
 				D01A4CF51E032FD700938DAE /* ViewController.m in Sources */,
 				D04E03631E06E2320063E6B3 /* PLPhotoCollectionViewCell.m in Sources */,
 				D01A4CF21E032FD700938DAE /* AppDelegate.m in Sources */,
+				D0D12EBD1E07C682002225E6 /* PLCollectionViewCell.m in Sources */,
 				D0D12EB71E07B079002225E6 /* ImageAssetsManager.m in Sources */,
 				D04E03661E06E2550063E6B3 /* PLPhotosViewController.m in Sources */,
 				D01A4D081E0331A000938DAE /* PLAlbumCollectionViewCell.m in Sources */,
 				D0B43E7B1E05CE01009A908B /* Album.m in Sources */,
+				D0B749E11E07FB42003E8B04 /* PLFullScreenCollectionViewCell.m in Sources */,
 				D01A4CEF1E032FD700938DAE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

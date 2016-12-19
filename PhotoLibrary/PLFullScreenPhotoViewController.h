@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+#import "ImageAssetsManager.h"
 @interface PLFullScreenPhotoViewController : UIViewController
-@property (nonatomic, copy) NSArray *assetsArray;
 @property (nonatomic, strong) NSIndexPath * indexPath;
+- (instancetype)initWithAssets:(NSArray *)assets
+             imageAssetManager:(ImageAssetsManager*)assetManager;
 @end

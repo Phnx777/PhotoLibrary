@@ -8,35 +8,46 @@
 
 #import "PLFullScreenPhotoViewController.h"
 #import "PLPhotosViewController.h"
-#import "PLPhotoCollectionViewCell.h"
-#import "ImageAssetsManager.h"
-@interface PLFullScreenPhotoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
+#import "PLFullScreenCollectionViewCell.h"
+
+@interface PLFullScreenPhotoViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) UICollectionView *photosCollectionView;
 @property (nonatomic, strong) ImageAssetsManager *assetManager;
+@property (nonatomic, copy) NSArray *assetsArray;
 @end
 
 @implementation PLFullScreenPhotoViewController
+
+- (instancetype)initWithAssets:(NSArray *)assets imageAssetManager:(ImageAssetsManager*)assetManager
+{
+    if ((self = [super init])) {
+        self.assetManager = assetManager;
+        self.assetsArray = assets;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     self.photosCollectionView = [[UICollectionView alloc]
                                  initWithFrame:self.view.bounds
                                  collectionViewLayout:layout];
-    [self.photosCollectionView registerClass:[PLPhotoCollectionViewCell class]
-                  forCellWithReuseIdentifier:[PLPhotoCollectionViewCell cellIdentifier]];
-    self.photosCollectionView.backgroundColor = [UIColor whiteColor];
+    [self.photosCollectionView registerClass:[PLFullScreenCollectionViewCell class]
+                  forCellWithReuseIdentifier:[PLFullScreenCollectionViewCell cellIdentifier]];
     self.photosCollectionView.dataSource = self;
     self.photosCollectionView.delegate = self;
-    self.photosCollectionView.showsVerticalScrollIndicator = YES;
     self.photosCollectionView.alwaysBounceVertical = NO;
     [self.photosCollectionView setPagingEnabled:YES];
     [self.view addSubview:self.photosCollectionView];
     
     self.assetManager = [[ImageAssetsManager alloc]init];
-    [self.photosCollectionView scrollToItemAtIndexPath:self.indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.photosCollectionView scrollToItemAtIndexPath:self.indexPath
+                                      atScrollPosition:UICollectionViewScrollPositionNone
+                                              animated:NO];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -46,15 +57,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    PLPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
-                                       [PLPhotoCollectionViewCell cellIdentifier] forIndexPath:indexPath];
-    [cell commonInit];
+    PLFullScreenCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:
+                                       [PLFullScreenCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     PHAsset *asset = self.assetsArray[indexPath.row];
     [self.assetManager getImageFromAsset:asset andSuccessBlock:^(UIImage *photo) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            cell.photo.image = photo;
+            [cell configureImage:photo];
         });
     }];
+    [self.assetManager cancelGettingImageFromAsset:asset];
     return cell;
 }
 
@@ -63,7 +74,7 @@
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGSize size = self.view.bounds.size;
-    return CGSizeMake(size.width, size.height);
+    return size;
 }
 
 - (void)viewDidLayoutSubviews

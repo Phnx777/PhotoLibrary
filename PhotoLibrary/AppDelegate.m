@@ -16,7 +16,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    ViewController *vc = [ViewController new];
+    ViewController *vc = [[ViewController alloc]init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = navController;
     // Override point for customization after application launch.
