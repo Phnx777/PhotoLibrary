@@ -76,8 +76,15 @@
             [cell configureImage:photo];
         });
     }];
-    [self.assetManager cancelGettingImageFromAsset:asset];
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    PHAsset *asset = _photoAssetsArray[indexPath.row];
+    [self.assetManager cancelGettingImageFromAsset:asset];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView

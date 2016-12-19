@@ -27,8 +27,8 @@
         requestOptions.resizeMode   = PHImageRequestOptionsResizeModeFast;
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
         requestOptions.synchronous = YES;
-        PHImageManager *manager = [PHImageManager defaultManager];
-        PHImageRequestID photoID = [manager requestImageForAsset:asset
+   
+        PHImageRequestID photoID = [[PHImageManager defaultManager] requestImageForAsset:asset
                            targetSize:[[UIScreen mainScreen] bounds].size
                           contentMode:PHImageContentModeDefault
                               options:requestOptions
@@ -43,17 +43,15 @@
 
 - (void)cancelGettingImageFromAsset:(PHAsset *)asset
 {
-    if ([_photoIDDictionary objectForKey:asset]) {
-        NSNumber *assetID = [_photoIDDictionary objectForKey:asset];
-        PHImageManager *manager = [PHImageManager defaultManager];
-        [manager cancelImageRequest:(PHImageRequestID)assetID];
+    NSNumber *assetID = [_photoIDDictionary objectForKey:asset];
+    if (assetID) {
+        [[PHImageManager defaultManager]cancelImageRequest:(PHImageRequestID)[assetID unsignedIntegerValue]];
     }
 }
 
 - (NSArray*)fetchAssetCollections
 {
     NSMutableArray *albums = [[NSMutableArray alloc]init];
-    
     PHFetchResult *assetCollection = [PHAssetCollection
                                       fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum
                                       subtype:PHAssetCollectionSubtypeAny

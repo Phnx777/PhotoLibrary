@@ -50,6 +50,8 @@
                                               animated:NO];
 }
 
+#pragma CollectionView delegates
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.assetsArray.count;
@@ -65,8 +67,15 @@
             [cell configureImage:photo];
         });
     }];
-    [self.assetManager cancelGettingImageFromAsset:asset];
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    PHAsset *asset = self.assetsArray[indexPath.row];
+    [self.assetManager cancelGettingImageFromAsset:asset];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -75,6 +84,13 @@
 {
     CGSize size = self.view.bounds.size;
     return size;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout*)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(25, 0, 0, 0);
 }
 
 - (void)viewDidLayoutSubviews
